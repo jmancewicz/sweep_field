@@ -9,6 +9,7 @@ from wtforms import widgets, Field, TextField, SubmitField, IntegerField, valida
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Shh!'
+app.config['WTF_CSRF_ENABLED'] = False
 
 from wtforms.compat import text_type, iteritems
 
@@ -115,7 +116,8 @@ def hello_world():
     if form.validate_on_submit():
         print '-------------'
         print str(form.data)
-
+    else:
+        print form.errors
 
 #        (start, end, incr) = form.sweep
 

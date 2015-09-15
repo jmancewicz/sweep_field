@@ -29,16 +29,14 @@
      });
 
      // Populate defaults for 'end' and 'incr' if blank
-     if (use_range) {
-         root.find('[name$=-end]').each(function() {
-             if ($(this).val() == '')
-                 $(this).val(start_val);
-         });
-         root.find('[name$=-incr]').each(function() {
-             if ($(this).val() == '')
-                 $(this).val(1);
-         });
-     }
+     root.find('[name$=-end]').each(function() {
+         if ($(this).val() == '')
+             $(this).val(start_val);
+     });
+     root.find('[name$=-incr]').each(function() {
+         if ($(this).val() == '')
+             $(this).val(1);
+     });
 
      // Toggle the display of the 'end' and 'incr' inputs.
      root.find('.optional').each(function() {
@@ -108,4 +106,15 @@
          updateRangeState(parent);
      });
  });
+
+$(document).submit(function()
+{
+    $('[name$=-toggle-button]').each(function() {
+        $(this).find('span').addClass('glyphicon');
+        updateRangeState($(this).parent());
+        console.log('fix');
+    });
+
+    // ... continue work
+});
 </script>
