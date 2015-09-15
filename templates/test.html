@@ -1,0 +1,17 @@
+{% block head %}
+<link rel="stylesheet" href="static/css/bootstrap.min.css">
+<link rel="stylesheet" href="static/css/range_inputs.css">
+<script src="static/js/jquery-1.11.1.min.js"></script>
+{% endblock %}
+
+{% include 'range_inputs.html' %}
+
+<form action="." method="post">
+    <dev>
+        {{ form.status }}
+        {{ form.sweep }}
+        {{ form.submit }}
+    </dev>
+</form>
+
+

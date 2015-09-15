@@ -1,0 +1,58 @@
+<script type="text/javascript">
+
+ $(document).ready(function() {
+     // Initially hide the extra fields
+     $('[name$=-incr], [name$=-end]').each(function() {
+         $(this).addClass('hidden optional');
+     });
+
+     $('[name$=-toggle-button]').each(function() {
+         $(this).find('span').addClass('glyphicon glyphicon-chevron-right')
+     });
+
+     $('[name$=-use_range]').each(function() {
+         if ($(this).val() == '') {
+             $(this).val(0);
+         }
+     });
+ });
+
+ $(function() {
+     $('[name$=-toggle-button]').click(function(){
+         var parent = $(this).parent();
+         
+         var use_range = false;
+         // This is very frail, looking for the parent().parent().
+         var use_range_element = parent.parent().parent().find('[name$=-use_range]');
+
+         if (use_range_element.length) {
+             console.log(use_range_element.get(0));
+             use_range = 1 - (use_range_element.get(0).value == '1');
+             use_range_element.get(0).value = use_range;
+         } else {
+             console.log("can't find use_range element");
+         }
+         console.log(use_range);
+
+         console.log(use_range_element);
+
+         parent.find('.optional').each(function() {
+             $(this).toggleClass('hidden');
+         });
+
+         parent.find('input').each(function() {
+             $(this).css('width', '100%');
+         });
+
+         $(this).find('span').each(function() {
+             if ($(this).hasClass('glyphicon-chevron-right')){
+                 $(this).removeClass('glyphicon-chevron-right');
+                 $(this).addClass('glyphicon-chevron-left');
+             } else {
+                 $(this).removeClass('glyphicon-chevron-left');
+                 $(this).addClass('glyphicon-chevron-right');
+             }
+         });
+     });
+ });
+</script>
