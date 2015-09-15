@@ -110,9 +110,15 @@ def hello_world():
     form = ExampleForm()
 
     print form.status.data
-
+    print '+++++++++++++'
+    print form.validate_on_submit()
     if form.validate_on_submit():
+        print '-------------'
         print str(form.data)
+
+
+#        (start, end, incr) = form.sweep
+
 
     return render_template('test.html', form=form)
 

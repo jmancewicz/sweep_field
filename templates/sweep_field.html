@@ -1,0 +1,111 @@
+<script type="text/javascript">
+
+ function updateRangeState(root) {
+     console.log("update");
+     console.log(root);
+
+     var use_range = false;
+     // This is very frail, looking for the parent().parent().
+     var use_range_element = root.parent().parent().find('[name$=-use_range]');
+
+     // Find the use_range toggle state.
+     if (use_range_element.length) {
+         console.log(use_range_element.get(0));
+         use_range = (use_range_element.get(0).value == '1');
+     } else {
+         console.log("can't find use_range element");
+     }
+
+     // Change the width of the 'start' input.
+     var start_val = '';
+     root.find('[name$=-start]').each(function() {
+         if (use_range) {
+             $(this).parent().css('width', '33.3333%');
+             start_val = $(this).val();
+             console.log('start_val ' + start_val);
+         } else {
+             $(this).parent().css('width', '100%');
+         }
+     });
+
+     // Populate defaults for 'end' and 'incr' if blank
+     if (use_range) {
+         root.find('[name$=-end]').each(function() {
+             if ($(this).val() == '')
+                 $(this).val(start_val);
+         });
+         root.find('[name$=-incr]').each(function() {
+             if ($(this).val() == '')
+                 $(this).val(1);
+         });
+     }
+
+     // Toggle the display of the 'end' and 'incr' inputs.
+     root.find('.optional').each(function() {
+         if (use_range)
+             $(this).removeClass('hidden');
+         else
+             $(this).addClass('hidden');
+     });
+
+     // use percentage rather than pixels
+     root.find('input').each(function() {
+         $(this).css('width', '100%');
+     });
+
+     // change the icon of the toggle button
+     root.find('.glyphicon').each(function() {
+         if (use_range){
+             $(this).removeClass('glyphicon-chevron-right');
+             $(this).addClass('glyphicon-chevron-left');
+         } else {
+             $(this).removeClass('glyphicon-chevron-left');
+             $(this).addClass('glyphicon-chevron-right');
+         }
+     });
+ }
+
+ $(document).ready(function() {
+     // Initially hide the extra fields
+     $('[name$=-incr], [name$=-end]').each(function() {
+         $(this).addClass('hidden optional');
+     });
+
+     $('[name$=-use_range]').each(function() {
+         if ($(this).val() == '') {
+             $(this).val(0);
+         }
+     });
+
+     $('[name$=-toggle-button]').each(function() {
+         $(this).find('span').addClass('glyphicon');
+         updateRangeState($(this).parent());
+     });
+ });
+
+ $(function() {
+     // In the sweep_field widget, there are 'start', 'end', and 'incr' inputs,
+     // a toggle button, and a hidden input, use_range, to hold the state of the toggle.
+     // If the toggle button is pressed, toggle the display of the end and incr widgets,
+     // and change the icon on the toggle button.
+     $('[name$=-toggle-button]').click(function(){
+         var parent = $(this).parent();
+         
+         var use_range = false;
+         // This is very frail, looking for the parent().parent().
+         var use_range_element = parent.parent().parent().find('[name$=-use_range]');
+
+         // Find the use_range toggle state, and invert it.
+         if (use_range_element.length) {
+             console.log(use_range_element.get(0));
+             use_range = 1 - (use_range_element.get(0).value == '1');
+             use_range_element.get(0).value = use_range;
+         } else {
+             console.log("can't find use_range element");
+         }
+         console.log(use_range);
+
+         updateRangeState(parent);
+     });
+ });
+</script>
