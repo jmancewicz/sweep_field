@@ -7,11 +7,15 @@
 {% include 'range_inputs.html' %}
 
 <form action="." method="post">
-    <dev>
+    <div>
         {{ form.status }}
-        {{ form.sweep }}
+        <div>
+            {{ form.sweep.label }}
+            {# form.sweep.tooltip #}
+            {{ form.sweep }}
+        </div>
         {{ form.submit }}
-    </dev>
+    </div>
 </form>
 
 

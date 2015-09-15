@@ -16,9 +16,7 @@ class NumberRangeForm(Form):
     start = IntegerField('Start', [validators.required()])
     end   = IntegerField('End', [validators.required()])
     incr  = IntegerField('Incr', [validators.required()])
-    use_range = HiddenField('Use_Range',
-                            [validators.required()],
-                        )
+    use_range = HiddenField('Use_Range', [validators.required()])
 
 class CustomField(Field):
     widget = widgets.TextInput()
@@ -98,12 +96,13 @@ class RowFormField(FormField):
         prefix to enclosed fields. The default is fine for most uses.
     """
     widget = RowWidget()
-
-
+    def __init__(self, form_class, label=None, validators=None, separator='-', tooltip='', **kwargs):
+        super(RowFormField, self).__init__(form_class, label, validators, separator, **kwargs)
+        self.tooltip = tooltip
 
 class ExampleForm(Form):
     status = CustomField()
-    sweep = RowFormField(NumberRangeForm)
+    sweep = RowFormField(NumberRangeForm, label='Learning Rate', tooltip='Learning rate is the rate of learning')
     submit = SubmitField('POST')
 
 @app.route('/', methods=['get', 'post'])
@@ -113,8 +112,7 @@ def hello_world():
     print form.status.data
 
     if form.validate_on_submit():
-        for entry in form.status.data:
-            print '{}'.format(entry)
+        print str(form.data)
 
     return render_template('test.html', form=form)
 
