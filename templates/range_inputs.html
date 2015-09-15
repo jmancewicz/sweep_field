@@ -34,10 +34,18 @@
          }
          console.log(use_range);
 
-         console.log(use_range_element);
+         parent.find('[name$=-start]').each(function() {
+             if (use_range)
+                 $(this).parent().css('width', '33.3333%');
+             else
+                 $(this).parent().css('width', '100%');
+         });
 
          parent.find('.optional').each(function() {
-             $(this).toggleClass('hidden');
+             if (use_range)
+                 $(this).removeClass('hidden');
+             else
+                 $(this).addClass('hidden');
          });
 
          parent.find('input').each(function() {
@@ -45,7 +53,7 @@
          });
 
          $(this).find('span').each(function() {
-             if ($(this).hasClass('glyphicon-chevron-right')){
+             if (use_range){
                  $(this).removeClass('glyphicon-chevron-right');
                  $(this).addClass('glyphicon-chevron-left');
              } else {
