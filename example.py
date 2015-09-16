@@ -12,12 +12,58 @@ app.config['SECRET_KEY'] = 'Shh!'
 app.config['WTF_CSRF_ENABLED'] = False
 
 from wtforms.compat import text_type, iteritems
+import numpy as np
 
 class NumberRangeForm(Form):
     start = IntegerField('Start', [validators.required()])
     end   = IntegerField('End', [validators.required()])
     incr  = IntegerField('Incr', [validators.required()])
     use_range = HiddenField('Use_Range', [validators.required()])
+
+    def getInteger(self, value):
+        output = None
+        try:
+            output = int(value)
+        except ValueError:
+            output = None
+            raise ValueError(self.gettext('Not a valid integer value'))
+        return output
+
+    # This still needs some work to check the range
+    def validate(self):
+        self._errors = []
+
+        status = super(NumberRangeForm, self).validate()
+
+        start = self.getInteger(self.start.data)
+        end = self.getInteger(self.end.data)
+        incr = self.getInteger(self.incr.data)
+        use_range = self.getInteger(self.use_range.data) == '1'
+
+        # Check that the sweep would work.
+        if use_range:
+            if np.sign(end-start) != 0 and np.sign(end-start) != np.sign(incr):
+                self._errors.append('Bad increment. Would be an infinite loop.')
+                status &= False
+
+        if not self._errors or len(self._errors) == 0:
+            self._errors = None
+            return True
+
+        return False
+
+    def range(self):
+        start = self.start.data
+        end = self.end.data
+        incr = self.incr.data
+        use_range = self.use_range.data == '1'
+
+        if use_range:
+            output = range(start, end, incr)
+            output.append(end)
+            return output
+        else:
+            return [start]
 
 class CustomField(Field):
     widget = widgets.TextInput()
@@ -69,7 +115,6 @@ class RowWidget(object):
                 hidden += text_type(subfield)
             else:
                 html.append('<div class="range-div">%s%s</div>' % (hidden, text_type(subfield)))
-                print hidden, text_type(subfield)
                 hidden = ''
 
         html.append('</span>')
@@ -103,26 +148,25 @@ class RowFormField(FormField):
 
 class ExampleForm(Form):
     status = CustomField()
-    sweep = RowFormField(NumberRangeForm, label='Learning Rate', tooltip='Learning rate is the rate of learning')
+    sweep1 = RowFormField(NumberRangeForm, label='Learning Rate', tooltip='Learning rate is the rate of learning')
+    sweep2 = RowFormField(NumberRangeForm, label='Bias', tooltip='Bias of something')
     submit = SubmitField('POST')
 
 @app.route('/', methods=['get', 'post'])
-def hello_world():
+def home():
     form = ExampleForm()
 
-    print form.status.data
-    print '+++++++++++++'
-    print form.validate_on_submit()
     if form.validate_on_submit():
-        print '-------------'
         print str(form.data)
+
+        print '==============='
+        print form.sweep1.range()
+        print form.sweep2.range()
+        print '==============='
     else:
         print form.errors
 
-#        (start, end, incr) = form.sweep
-
-
-    return render_template('test.html', form=form)
+    return render_template('example.html', form=form)
 
 
 from flask import request
@@ -140,4 +184,3 @@ def shutdown():
 if __name__ == '__main__':
     #shutdown_server()
     app.run(debug=True)
-
