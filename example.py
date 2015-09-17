@@ -22,8 +22,8 @@ def home():
         print str(form.data)
 
         print '==============='
-        print form.sweep1.range()
-        print form.sweep2.range()
+        print str(form.sweep1.label), form.sweep1.range()
+        print str(form.sweep2.label), form.sweep2.range()
         print '==============='
     else:
         print form.errors

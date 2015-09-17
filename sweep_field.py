@@ -19,12 +19,15 @@ class SweepForm(Form):
         if incr == 0:
             incr = 1
 
-        if use_range:
-            output = range(start, end, incr)
-            output.append(end)
-            return output
-        else:
+        if not use_range:
             return [start]
+        else:
+            if np.sign(end - start) != np.sign(incr):
+                return [start,end]
+            else:
+                output = range(start, end, incr)
+                output.append(end)
+                return output
 
 class RowWidget(object):
     """
