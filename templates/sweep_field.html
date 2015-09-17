@@ -19,10 +19,10 @@
      // Change the width of the 'start' input.
      var start_val = '';
      root.find('[name$=-start]').each(function() {
+         start_val = $(this).val();
+         console.log('start_val ' + start_val);
          if (use_range) {
              $(this).parent().css('width', '33.3333%');
-             start_val = $(this).val();
-             console.log('start_val ' + start_val);
          } else {
              $(this).parent().css('width', '100%');
          }

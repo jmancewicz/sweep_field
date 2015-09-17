@@ -10,43 +10,14 @@ class SweepForm(Form):
     incr  = IntegerField('Incr', [validators.required()])
     use_range = HiddenField('Use_Range', [validators.required()])
 
-    def getInteger(self, value):
-        output = None
-        try:
-            output = int(value)
-        except ValueError:
-            output = None
-            raise ValueError(self.gettext('Not a valid integer value'))
-        return output
-
-    # This still needs some work to check the range
-    def validate(self):
-        self._errors = []
-
-        status = super(SweepForm, self).validate()
-
-        start = self.getInteger(self.start.data)
-        end = self.getInteger(self.end.data)
-        incr = self.getInteger(self.incr.data)
-        use_range = self.getInteger(self.use_range.data) == '1'
-
-        # Check that the sweep would work.
-        if use_range:
-            if np.sign(end-start) != 0 and np.sign(end-start) != np.sign(incr):
-                self._errors.append('Bad increment. Would be an infinite loop.')
-                status &= False
-
-        if not self._errors or len(self._errors) == 0:
-            self._errors = None
-            return True
-
-        return False
-
     def range(self):
         start = self.start.data
         end = self.end.data
         incr = self.incr.data
         use_range = self.use_range.data == '1'
+
+        if incr == 0:
+            incr = 1
 
         if use_range:
             output = range(start, end, incr)
