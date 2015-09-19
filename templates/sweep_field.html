@@ -1,5 +1,22 @@
 <script type="text/javascript">
 
+ function number_of_permutations() {
+     console.log("number");
+     var total = 1;
+     
+     $('[name$=-use_range]').each(function() {
+         var use_range = $(this).value == '1';
+         var start = $(this).find('[name$=-start]').get(0).value;
+         var end = $(this).find('[name$=-end]').get(0).value;
+         var incr = $(this).find('[name$=-incr]').get(0).value;
+     });
+
+     $('#submit').each(function() {
+         $(this).val('2112');
+         $(this).addClass('2112');
+     });
+ }
+
  function updateRangeState(root) {
      console.log("update");
      console.log(root);
@@ -79,6 +96,9 @@
          $(this).find('span').addClass('glyphicon');
          updateRangeState($(this).parent());
      });
+
+     number_of_permutations();
+
  });
 
  $(function() {

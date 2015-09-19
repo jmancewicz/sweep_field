@@ -10,6 +10,9 @@ class SweepForm(Form):
     incr  = IntegerField('Incr', [validators.required()])
     use_range = HiddenField('Use_Range', [validators.required()])
 
+    def __init__(self, formdata=None, obj=None, prefix='', data=None, meta=None, **kwargs):
+        super(SweepForm, self).__init__(formdata, obj, prefix, data, meta, kwargs)
+
     def range(self):
         start = self.start.data
         end = self.end.data

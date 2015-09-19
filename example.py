@@ -19,12 +19,12 @@ def home():
     form = ExampleForm()
 
     if form.validate_on_submit():
-        print str(form.data)
-
         print '==============='
         print str(form.sweep1.label), form.sweep1.range()
         print str(form.sweep2.label), form.sweep2.range()
         print '==============='
+
+        print len(form.sweep1.range()) * len(form.sweep2.range())
     else:
         print form.errors
 
